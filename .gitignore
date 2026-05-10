@@ -1,0 +1,7 @@
+node_modules
+dist
+.env
+*.log
+.DS_Store
+sat-express-postgres-blueprint.md
+MIO-1636_MCF_Design_manual_Rev1.1.pdf 
