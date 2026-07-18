@@ -1,12 +1,17 @@
 {
-  "name": "sat-express-postgres",
+  "name": "bml-rail-operations",
   "version": "0.1.0",
   "private": true,
   "type": "commonjs",
   "scripts": {
     "dev": "tsx watch src/server.ts",
+    "dev:web": "vite --config web/vite.config.ts",
     "start": "node dist/server.js",
     "build": "tsc -p tsconfig.json",
+    "typecheck:web": "tsc -p web/tsconfig.json",
+    "build:web": "tsc -p web/tsconfig.json && vite build --config web/vite.config.ts",
+    "build:all": "bun run build && bun run build:web",
+    "preview:web": "vite preview --config web/vite.config.ts",
     "migrate": "tsx src/db/migrate.ts",
     "bootstrap": "tsx src/db/bootstrap.ts",
     "worker:ingestion": "tsx src/workers/ingestion-worker.ts",
@@ -21,11 +26,18 @@
     "express": "^5.2.1",
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.3",
+    "leaflet": "^1.9.4",
+    "lucide-react": "^0.468.0",
     "mqtt": "^5.10.4",
     "pdfkit": "^0.15.0",
     "pg": "^8.13.1",
     "pino": "^9.5.0",
     "pino-http": "^10.4.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-leaflet": "^5.0.0",
+    "react-router": "^7.0.0",
+    "recharts": "^3.0.0",
     "zod": "^3.24.1"
   },
   "devDependencies": {
@@ -33,9 +45,14 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.0",
     "@types/jsonwebtoken": "^9.0.7",
+    "@types/leaflet": "^1.9.15",
     "@types/node": "^22.10.2",
     "@types/pdfkit": "^0.13.8",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
     "tsx": "^4.19.2",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "vite": "^6.0.5"
   }
 }

@@ -1,4 +1,6 @@
 import express from 'express';
+import path from 'node:path';
+import fs from 'node:fs';
 import cors from 'cors';
 import helmet from 'helmet';
 import pinoHttp from 'pino-http';
@@ -23,22 +25,43 @@ export function createApp() {
       logger
     })
   );
-  app.use(helmet());
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          imgSrc: ["'self'", 'data:', 'https://*.tile.openstreetmap.org']
+        }
+      }
+    })
+  );
   app.use(cors());
   app.use(express.json({ limit: '2mb' }));
 
-  app.get('/healthz', (_req, res) => {
-    res.json({ ok: true, service: 'sat-express-postgres' });
+  app.get(['/healthz', '/api/healthz'], (_req, res) => {
+    res.json({ ok: true, service: 'bml-rail-operations' });
   });
 
-  app.use('/auth', authRouter);
-  app.use('/overview', overviewRouter);
-  app.use('/coaches', coachesRouter);
-  app.use('/contacts', contactsRouter);
-  app.use('/triggers', triggersRouter);
-  app.use('/notifications', notificationsRouter);
-  app.use('/reports', reportsRouter);
-  app.use('/admin', adminRouter);
+  app.use('/api/auth', authRouter);
+  app.use('/api/overview', overviewRouter);
+  app.use('/api/coaches', coachesRouter);
+  app.use('/api/contacts', contactsRouter);
+  app.use('/api/triggers', triggersRouter);
+  app.use('/api/notifications', notificationsRouter);
+  app.use('/api/reports', reportsRouter);
+  app.use('/api/admin', adminRouter);
+
+  if (process.env.NODE_ENV === 'production') {
+    const webDir = path.resolve(__dirname, '../dist-web');
+    if (fs.existsSync(webDir)) {
+      app.use(express.static(webDir));
+      app.get(/.*/, (req, res, next) => {
+        if (req.path.startsWith('/api/') || req.method !== 'GET' || !req.accepts('html')) {
+          return next();
+        }
+        return res.sendFile(path.join(webDir, 'index.html'));
+      });
+    }
+  }
 
   app.use(notFoundHandler);
   app.use(errorHandler);

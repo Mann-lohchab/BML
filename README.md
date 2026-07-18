@@ -1,6 +1,8 @@
-# SAT Express Postgres
+# BML Rail Operations
 
-Backend scaffold for the Shelling Analytical Tool described in `sat-express-postgres-blueprint.md`.
+Full-stack railway telemetry and shelling analytics platform. The backend follows the
+Shelling Analytical Tool blueprint in `sat-express-postgres-blueprint.md`; the frontend
+is a React application powered by React Router v7.
 
 ## What is included
 
@@ -12,6 +14,8 @@ Backend scaffold for the Shelling Analytical Tool described in `sat-express-post
 - contacts, triggers, notifications, reports, and admin CRUD endpoints
 - CSV and PDF report artifact generation
 - Native C UDP reader for the WSPD-side packet format from the PDF
+- BML operations frontend with overview, maps, coach analytics, contacts, triggers,
+  notifications, reports, and CED administration
 
 ## Local setup
 
@@ -24,7 +28,7 @@ docker compose up -d
 2. Install dependencies:
 
 ```bash
-npm install
+bun install
 ```
 
 3. Copy environment values:
@@ -45,11 +49,55 @@ npm run migrate
 npm run bootstrap
 ```
 
+The example environment creates the dashboard demo account:
+
+```text
+ID: admin@bml.local
+Password: bmladmin123
+```
+
+The login screen can fill these credentials automatically. Change both bootstrap values
+before using BML outside a local demonstration environment.
+
 6. Start the API:
 
 ```bash
 npm run dev
 ```
+
+7. Start the frontend in a second terminal:
+
+```bash
+npm run dev:web
+```
+
+Open `http://localhost:5173`. Vite proxies `/api` requests to the API on port `3000`.
+All application API routes are namespaced under `/api`; `/healthz` and `/api/healthz`
+are both available for health checks.
+
+## Frontend
+
+The frontend lives in `web/` and uses React Router v7 in data-router mode. Available
+screens cover every API surface currently exposed by BML:
+
+- secure login and account recovery request
+- fleet summary, live coach map, activity, and trigger status
+- coach registry and detailed parameters, trends, valve states, alerts, shelling index,
+  and GPS history
+- CED device administration
+- contacts and notification read state
+- trigger creation, editing, enable/disable, and deletion
+- report requests, status, detail, and authenticated artifact downloads
+
+For a production build:
+
+```bash
+npm run build:all
+NODE_ENV=production npm start
+```
+
+The Express server serves the compiled SPA from `dist-web` in production. Set
+`VITE_API_BASE_URL` at build time only when the API is hosted on a different origin.
 
 ## Background workers
 

@@ -6,7 +6,7 @@ async function main() {
   const app = createApp();
   app.listen(env.PORT, () => {
     // eslint-disable-next-line no-console
-    console.log(`SAT API listening on http://localhost:${env.PORT}`);
+    console.log(`BML API listening on http://localhost:${env.PORT}`);
   });
 
   process.on('SIGINT', async () => {

@@ -130,7 +130,7 @@ async function writePdf(filePath: string, reportType: string, coachCount: number
     const doc = new PDFDocument({ margin: 48 });
     const stream = fs.createWriteStream(filePath);
     doc.pipe(stream);
-    doc.fontSize(18).text('SAT Report', { align: 'center' });
+    doc.fontSize(18).text('BML Report', { align: 'center' });
     doc.moveDown();
     doc.fontSize(12).text(`Report type: ${reportType}`);
     doc.text(`Coach count: ${coachCount}`);

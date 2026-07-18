@@ -124,7 +124,8 @@ async function matchesRule(
   }
 
   if (rule.metric === 'status') {
-    return compareText(String(current.status), rule.operator, String(rule.threshold ?? ''));
+    const expectedStatus = rule.condition_json?.value ?? rule.threshold ?? '';
+    return compareText(String(current.status), rule.operator, String(expectedStatus));
   }
 
   return Boolean(rule.condition_json?.enabled ?? false);
